@@ -6,7 +6,7 @@ import notFoundRouter from "./routes/notFoundRouter";
 const app: Application = express();
 
 app.use(express.json());
-app.use("/public", express.static(path.join(__dirname, "public")));
+app.use("/output", express.static(path.join(__dirname, "images/output")));
 
 app.set("views", path.resolve(__dirname, "views"));
 app.engine("pug", require("pug").__express);
