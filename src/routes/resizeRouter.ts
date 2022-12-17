@@ -11,8 +11,7 @@ import path from "path";
 
 const imageProcRouter = Router();
 
-imageProcRouter.get("/", (req: Request, res: Response) => {
-  console.log(req.query);
+imageProcRouter.get("/", async (req: Request, res: Response) => {
   let { width, height, name } = req.query;
 
   const n: string = (name as string).toLowerCase();
@@ -20,15 +19,15 @@ imageProcRouter.get("/", (req: Request, res: Response) => {
   const h: number = parseInt(height as string, 10) as number;
 
   if (!imageExists(n)) {
-    // return res.render("not-found");
+    return res.render("not-found");
   }
 
   const cached = getCachedOrFail(n, w, h);
   if (cached) {
-    // return res.sendFile(cached as string);
+    return res.render("image", { image: cached });
   }
 
-  const resized: string = path.resolve(resize(n, w, h));
+  const resized: string = path.resolve(await resize(n, w, h));
   res.render("image", { image: resized });
 });
 
