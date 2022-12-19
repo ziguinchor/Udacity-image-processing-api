@@ -1,4 +1,4 @@
-import { resize } from "./resizeController";
+import { resize } from "../controllers/resizeController";
 
 it("should return relative path of image if exists", () => {
   return resize("landshaft", 10, 10).then((relPath) => {
