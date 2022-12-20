@@ -16,7 +16,7 @@ app.engine("pug", require("pug").__express);
 app.set("view engine", "pug");
 
 app.use("/", homeRouter);
-app.use("/resize", resizeRouter);
+app.use("/images", resizeRouter);
 app.use("*", notFoundRouter);
 
 export default app;
