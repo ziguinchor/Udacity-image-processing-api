@@ -9,29 +9,42 @@ import {
 } from "../controllers/resizeController";
 import path from "path";
 
-const imageProcRouter = Router();
+const router = Router();
 
-imageProcRouter.get("/", async (req: Request, res: Response) => {
-  let { width, height, name } = req.query;
+interface dto {
+  name: string;
+  height: string;
+  width: string;
+}
+
+router.get("/", async (req: Request, res: Response) => {
+  function isNumeric(value: string) {
+    return /^-?\d+$/.test(value);
+  }
+
+  let { width, height, name } = req.query as unknown as dto;
 
   if (!name) {
     return res.status(400).send("No image file name provided!");
   }
 
+  if (!height || !width) {
+    return res.status(400).send("Please provide correct height/width value !");
+  }
+
+  console.log(typeof +width !== "number", width, +width);
+  if (!isNumeric(height) || !isNumeric(width) || +width <= 0 || +height <= 0)
+    return res
+      .status(400)
+      .send("Please Provide a correct values for height and width.");
+
   const n: string = (name as string).toLowerCase();
-  const w: number = parseInt(width as string, 10) as number;
-  const h: number = parseInt(height as string, 10) as number;
+  const w: number = +width;
+  const h: number = +height;
 
   if (!imageExists(n)) {
     return res.status(404).render("not-found");
   }
-
-  if (w <= 0 || h <= 0)
-    res
-      .status(400)
-      .send("Please Provide a correct values for height and width.");
-  
-  
 
   const cached = getCachedOrFail(n, w, h);
   if (cached) {
@@ -42,4 +55,4 @@ imageProcRouter.get("/", async (req: Request, res: Response) => {
   res.render("image", { image: resized });
 });
 
-export default imageProcRouter;
+export default router;
