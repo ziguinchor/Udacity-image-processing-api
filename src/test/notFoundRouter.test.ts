@@ -12,4 +12,3 @@ describe("GET /images?name=InexistentImage&width=100&heigh=100", () => {
       });
   });
 });
-
